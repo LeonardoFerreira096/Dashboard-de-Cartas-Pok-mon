@@ -3,13 +3,18 @@ import Header from "./compenentes/Header";
 
 const App = () => {
   const [colecaoDeCartas, setColecaoDeCartas] = useState([]);
+  const [cartasFiltradas, setCartasFiltradas] = useState([]);
   const [cartasSelecionadas, setCartasSelecionadas] = useState([]);
+  const [busca, setBusca] = useState('');
 
   // Buscar cartas da API
   useEffect(() => {
-    fetch("https://api.pokemontcg.io/v2/cards?pageSize=10")
+    fetch("https://api.pokemontcg.io/v2/cards?pageSize=20") 
       .then((res) => res.json())
-      .then((data) => setColecaoDeCartas(data.data))
+      .then((data) => {
+        setColecaoDeCartas(data.data);
+        setCartasFiltradas(data.data); // Mostrar todas inicialmente
+      })
       .catch((err) => console.error("Erro ao buscar cartas:", err));
   }, []);
 
@@ -21,11 +26,19 @@ const App = () => {
     }
   }, []);
 
+  // Buscar cartas por nome
+  const aoBuscar = () => {
+    const resultado = colecaoDeCartas.filter((carta) =>
+      carta.name.toLowerCase().includes(busca.toLowerCase())
+    );
+    setCartasFiltradas(resultado);
+  };
+
   // Função para adicionar/remover carta da seleção
   const alternarSelecao = (carta) => {
     const jaSelecionada = cartasSelecionadas.some((c) => c.id === carta.id);
-
     let novasCartas;
+
     if (jaSelecionada) {
       novasCartas = cartasSelecionadas.filter((c) => c.id !== carta.id);
     } else {
@@ -49,13 +62,16 @@ const App = () => {
 
   return (
     <div>
-      <Header />
+      <Header busca={busca} setBusca={setBusca} aoBuscar={aoBuscar} />
       <main className="px-4">
         <section aria-labelledby="titulo-cartas" className="mt-6">
           <div className="flex items-center justify-between mb-4">
             <h2 id="titulo-cartas" className="text-2xl font-bold">Cartas de Pokémon Salvas</h2>
             {cartasSelecionadas.length > 0 && (
-              <button onClick={limparCartas} className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition">
+              <button
+                onClick={limparCartas}
+                className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
+              >
                 Limpar todas
               </button>
             )}
@@ -81,11 +97,11 @@ const App = () => {
             </div>
           )}
 
-          {colecaoDeCartas.length === 0 ? (
-            <p className="text-center text-gray-500">Carregando cartas...</p>
+          {cartasFiltradas.length === 0 ? (
+            <p className="text-center text-gray-500">Nenhuma carta encontrada.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {colecaoDeCartas.map((carta) => (
+              {cartasFiltradas.map((carta) => (
                 <div
                   key={carta.id}
                   onClick={() => alternarSelecao(carta)}
