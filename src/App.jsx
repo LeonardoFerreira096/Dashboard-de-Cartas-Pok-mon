@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useEffect, useState } from "react";
 import Header from "./compenentes/Header";
 import CartaModal from "./compenentes/CartaModal";
@@ -120,8 +121,8 @@ const App = () => {
       {cartaAtiva && (
         <CartaModal
           carta={cartaAtiva}
-          onClose={() => setCartaAtiva(null)}
-          onToggleFavorito={alternarSelecao}
+          aoFechar={() => setCartaAtiva(null)}            // Corrigido aqui
+          aoAlternarFavorito={alternarSelecao}           // Corrigido aqui
           estaSelecionada={cartaEstaSelecionada(cartaAtiva.id)}
         />
       )}
