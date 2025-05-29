@@ -147,8 +147,8 @@ const App = () => {
       {cartaAtiva && (
         <CartaModal
           carta={cartaAtiva}
-          aoFechar={() => setCartaAtiva(null)}           
-          aoAlternarFavorito={alternarSelecao}          
+          aoFechar={() => setCartaAtiva(null)}
+          aoAlternarFavorito={alternarSelecao}
           estaSelecionada={cartaEstaSelecionada(cartaAtiva.id)}
         />
       )}
