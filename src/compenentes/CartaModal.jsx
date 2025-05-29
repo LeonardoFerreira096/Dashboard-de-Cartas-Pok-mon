@@ -1,3 +1,18 @@
+/**
+ * Nome do arquivo: CartaModal.jsx
+ * Data de criação: 26/05/2025
+ * Autor: Leonardo Costa Ferreira
+ * Matrícula: 01738044
+ *
+ * Descrição:
+ * Este componente React implementa um modal para mostrar na tela detalhes 
+ * da carta e um botão para salvar no componente Header.
+ * Funcionalidades:
+ * - exibir um modal ao clicar na carta e mostra detalhes.
+ * - Estilização com Tailwind.
+ */
+
+
 import React, { useEffect } from "react";
 
 // Componente para mostrar uma linha de informação (rótulo + valor)

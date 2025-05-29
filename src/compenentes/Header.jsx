@@ -1,4 +1,16 @@
-// Header.jsx
+/**
+ * Nome do arquivo: Header.jsx
+ * Data de criação: 10/05/2025
+ * Autor: Leonardo Costa Ferreira
+ * Matrícula: 01738044
+ *
+ * Descrição:
+ * Este componente React implementa um input para pesquisar cartas da API
+ * Funcionalidades:
+ * - exibir um modal ao clicar na carta e mostra detalhes.
+ * - Estilização com Tailwind
+ */
+
 import React from "react";
 
 const Header = ({ busca, setBusca }) => {

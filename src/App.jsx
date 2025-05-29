@@ -1,3 +1,19 @@
+/**
+ * Nome do arquivo: App.jsx
+ * Data de criação: 10/05/2025
+ * Autor: Leonardo Costa Ferreira
+ * Matrícula: 01738044
+ *
+ * Descrição:
+ * Este componente React implementa um dashboard de cartas do Pokémon TCG.
+ * Funcionalidades:
+ * - Campo de busca por nome do Pokémon
+ * - Persistência e exibição de cartas salvas no localStorage e botão para excluir do "Cartas salvas"
+ * - Estilização com Tailwind
+ */
+
+
+
 import React, { useEffect, useState } from "react";
 import Header from "./compenentes/Header";
 import CartaModal from "./compenentes/CartaModal";
