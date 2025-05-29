@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useEffect, useState } from "react";
 import Header from "./compenentes/Header";
 import CartaModal from "./compenentes/CartaModal";
@@ -6,22 +5,10 @@ import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
 
 const App = () => {
-  const [colecaoDeCartas, setColecaoDeCartas] = useState([]);
   const [cartasFiltradas, setCartasFiltradas] = useState([]);
   const [cartasSelecionadas, setCartasSelecionadas] = useState([]);
   const [busca, setBusca] = useState('');
   const [cartaAtiva, setCartaAtiva] = useState(null);
-
-  // Buscar cartas da API
-  useEffect(() => {
-    fetch("https://api.pokemontcg.io/v2/cards?pageSize=20")
-      .then((res) => res.json())
-      .then((data) => {
-        setColecaoDeCartas(data.data);
-        setCartasFiltradas(data.data);
-      })
-      .catch((err) => console.error("Erro ao buscar cartas:", err));
-  }, []);
 
   // Carregar cartas salvas do localStorage
   useEffect(() => {
@@ -31,17 +18,27 @@ const App = () => {
     }
   }, []);
 
-  // Atualizar lista filtrada com base na busca
+  // Buscar cartas na API pelo nome
   useEffect(() => {
     if (busca.trim() === "") {
-      setCartasFiltradas(colecaoDeCartas);
-    } else {
-      const resultado = colecaoDeCartas.filter((carta) =>
-        carta.name.toLowerCase().includes(busca.toLowerCase())
-      );
-      setCartasFiltradas(resultado);
+      setCartasFiltradas([]);
+      return;
     }
-  }, [busca, colecaoDeCartas]);
+
+    const fetchCartas = async () => {
+      try {
+        const resposta = await fetch(
+          `https://api.pokemontcg.io/v2/cards?q=name:*${encodeURIComponent(busca)}*`
+        );
+        const dados = await resposta.json();
+        setCartasFiltradas(dados.data);
+      } catch (erro) {
+        console.error("Erro ao buscar cartas por nome:", erro);
+      }
+    };
+
+    fetchCartas();
+  }, [busca]);
 
   // Adicionar ou remover carta dos favoritos
   const alternarSelecao = (carta) => {
@@ -104,6 +101,9 @@ const App = () => {
         {/* Lista de Cartas Filtradas */}
         <section className="mt-6">
           <h2 className="text-2xl font-bold mb-4">Cartas Pokémon</h2>
+          {busca.trim() === "" && (
+            <p className="text-gray-500 mb-4"></p>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {cartasFiltradas.map((carta) => {
               const selecionada = cartaEstaSelecionada(carta.id);
