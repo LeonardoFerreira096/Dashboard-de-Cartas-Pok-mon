@@ -1,14 +1,25 @@
+// Header.jsx
+import React from "react";
 
-const Header = ({ busca, setBusca, aoBuscar }) => {
+const Header = ({ busca, setBusca }) => {
   return (
-    <header className="bg-white py-4 px-6 shadow flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div className="flex items-center gap-2">
-        <input type="text"value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          placeholder="Digite o nome da carta"
-          className="border border-gray-300 px-3 py-1 rounded"
+    <header className="p-4 bg-gray-100 flex items-center justify-center">
+      <div className="flex items-center w-full max-w-4xl gap-4">
+        {/* Logo usando o nome correto */}
+        <img
+          src="/Pokemon-Logo-PNG-Cutout.webp"
+          alt="Logo Pokémon"
+          className="h-10 w-auto"
         />
-        <button onClick={aoBuscar}className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"> Buscar </button>
+
+        {/* Campo de busca */}
+        <input
+          type="text"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Buscar cartas Pokémon..."
+          className="border rounded px-4 py-2 flex-grow"
+        />
       </div>
     </header>
   );

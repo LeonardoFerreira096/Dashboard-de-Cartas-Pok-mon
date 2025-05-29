@@ -2,13 +2,15 @@
 import React, { useEffect, useState } from "react";
 import Header from "./compenentes/Header";
 import CartaModal from "./compenentes/CartaModal";
+import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
+import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
 
 const App = () => {
   const [colecaoDeCartas, setColecaoDeCartas] = useState([]);
   const [cartasFiltradas, setCartasFiltradas] = useState([]);
   const [cartasSelecionadas, setCartasSelecionadas] = useState([]);
   const [busca, setBusca] = useState('');
-  const [cartaAtiva, setCartaAtiva] = useState(null); // Para modal
+  const [cartaAtiva, setCartaAtiva] = useState(null);
 
   // Buscar cartas da API
   useEffect(() => {
@@ -29,13 +31,17 @@ const App = () => {
     }
   }, []);
 
-  // Buscar cartas por nome
-  const aoBuscar = () => {
-    const resultado = colecaoDeCartas.filter((carta) =>
-      carta.name.toLowerCase().includes(busca.toLowerCase())
-    );
-    setCartasFiltradas(resultado);
-  };
+  // Atualizar lista filtrada com base na busca
+  useEffect(() => {
+    if (busca.trim() === "") {
+      setCartasFiltradas(colecaoDeCartas);
+    } else {
+      const resultado = colecaoDeCartas.filter((carta) =>
+        carta.name.toLowerCase().includes(busca.toLowerCase())
+      );
+      setCartasFiltradas(resultado);
+    }
+  }, [busca, colecaoDeCartas]);
 
   // Adicionar ou remover carta dos favoritos
   const alternarSelecao = (carta) => {
@@ -65,7 +71,7 @@ const App = () => {
 
   return (
     <div>
-      <Header busca={busca} setBusca={setBusca} aoBuscar={aoBuscar} />
+      <Header busca={busca} setBusca={setBusca} />
 
       <main className="px-4">
         {/* Seção de Cartas Salvas */}
@@ -99,20 +105,40 @@ const App = () => {
         <section className="mt-6">
           <h2 className="text-2xl font-bold mb-4">Cartas Pokémon</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cartasFiltradas.map((carta) => (
-              <div
-                key={carta.id}
-                onClick={() => setCartaAtiva(carta)}
-                className={`cursor-pointer bg-white shadow-md rounded-lg overflow-hidden border p-4 hover:shadow-lg transition 
-                  ${cartaEstaSelecionada(carta.id) ? "border-blue-500 ring-2 ring-blue-300" : "border-gray-200"}`}
-              >
-                <img src={carta.images.small} alt={carta.name} className="w-full mb-4" />
-                <h3 className="text-lg font-semibold">{carta.name}</h3>
-                <p className="text-sm"><strong>HP:</strong> {carta.hp}</p>
-                <p className="text-sm"><strong>Tipo:</strong> {carta.types?.join(", ") || "N/A"}</p>
-                <p className="text-sm"><strong>Raridade:</strong> {carta.rarity || "N/A"}</p>
-              </div>
-            ))}
+            {cartasFiltradas.map((carta) => {
+              const selecionada = cartaEstaSelecionada(carta.id);
+              return (
+                <div
+                  key={carta.id}
+                  className={`relative bg-white shadow-md rounded-lg overflow-hidden border p-4 hover:shadow-lg transition 
+                    ${selecionada ? "border-blue-500 ring-2 ring-blue-300" : "border-gray-200"}`}
+                >
+                  <img
+                    src={carta.images.small}
+                    alt={carta.name}
+                    className="w-full mb-4 cursor-pointer"
+                    onClick={() => setCartaAtiva(carta)}
+                  />
+                  <h3 className="text-lg font-semibold">{carta.name}</h3>
+                  <p className="text-sm"><strong>HP:</strong> {carta.hp}</p>
+                  <p className="text-sm"><strong>Tipo:</strong> {carta.types?.join(", ") || "N/A"}</p>
+                  <p className="text-sm"><strong>Raridade:</strong> {carta.rarity || "N/A"}</p>
+
+                  {/* Botão de favoritar/desfavoritar */}
+                  <button
+                    onClick={() => alternarSelecao(carta)}
+                    className="absolute top-2 right-2 text-red-500 hover:scale-110 transition-transform"
+                    title={selecionada ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                  >
+                    {selecionada ? (
+                      <HeartSolid className="h-6 w-6" />
+                    ) : (
+                      <HeartOutline className="h-6 w-6" />
+                    )}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </section>
       </main>
